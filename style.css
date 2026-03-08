@@ -1,0 +1,936 @@
+:root {
+    --primary: #c2185b;
+    --dark: #1a1a1a;
+    --gray-bg: #f8f9fa;
+    --gray-medium: #8e8e93;
+    --white: #ffffff;
+    --green: #25d366;
+    --gold: #d4af37;
+    --bezier: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* SUPORTE MODO DARK */
+body.dark-mode {
+    --gray-bg: #121212;
+    --dark: #f8f9fa;
+    --white: #1e1e1e;
+}
+
+body.dark-mode .card, 
+body.dark-mode .app-header, 
+body.dark-mode .tab-bar, 
+body.dark-mode .modal-sheet,
+body.dark-mode .category-chip,
+body.dark-mode .price-filter-btn,
+body.dark-mode .card-destaque,
+body.dark-mode .category-list-vertical button,
+body.dark-mode .menu-options-list button,
+body.dark-mode .delivery-selection label {
+    background-color: #1e1e1e;
+    color: #fff;
+    border-color: #333;
+}
+
+body.dark-mode #search-input { 
+    background: #2a2a2a !important; 
+    color: #fff !important; 
+    border: 1px solid #444;
+}
+
+
+body.dark-mode .section-title { color: #fff; }
+body.dark-mode .cart-item { background: #2a2a2a; border-color: #333; }
+body.dark-mode .totals-section { background: #222; border-color: #444; }
+
+body.dark-mode .category-row-container .card {
+    background: #1e1e1e;
+    border-color: #333;
+}
+
+body.dark-mode .scroll-indicator .dot {
+    background: #444;
+}
+body.dark-mode .btn-add-cart { background: #3d0a1d; color: #ff80ab; }
+body.dark-mode .category-item-btn { background-color: #2a2a2a !important; border-color: #444 !important; color: #fff !important; }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+body { background: var(--gray-bg); color: var(--dark); overflow-x: hidden; transition: background 0.3s; }
+.hidden { display: none !important; }
+
+/* SKELETON LOADER */
+.skeleton {
+    background: #e0e0e0;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 20px;
+}
+@keyframes skeleton-loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* ANIMAÇÕES */
+@keyframes slideUpModal { from { transform: translateY(100%); } to { transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes cardPop { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes cartPop { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+
+.cart-pop { animation: cartPop 0.3s var(--bezier); }
+
+button:active { transform: scale(0.95); transition: 0.1s; }
+
+/* COMPONENTES ADICIONAIS */
+.price-filter-btn { background: var(--white); border: 1px solid #eee; padding: 8px 15px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; white-space: nowrap; cursor: pointer; }
+.fav-btn-card { position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.8); border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; z-index: 5; color: #ccc; }
+.fav-btn-card.active { color: #ff4d4f; }
+.stock-warning { font-size: 0.65rem; color: #ff4d4f; font-weight: 800; margin-top: 4px; }
+
+/* CRONÔMETRO DE OFERTAS */
+.offer-timer {
+    background: rgba(194, 24, 91, 0.1);
+    color: var(--primary);
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 4px;
+    text-align: center;
+    border-radius: 6px;
+    margin: 5px 0;
+}
+.timer-display { display: inline-block; letter-spacing: 0.5px; }
+
+/* DESTAQUE DOURADO */
+.btn-combo-gold {
+    background: linear-gradient(135deg, #fff7e6 0%, #ffebcc 100%) !important;
+    border: 1.5px solid var(--gold) !important;
+    color: #856404 !important;
+}
+.btn-combo-gold i { color: var(--gold); }
+
+/* GATEWAY */
+.gate-overlay { position: fixed; inset: 0; background: var(--dark); z-index: 5000; display: flex; align-items: flex-end; }
+.gate-card { background: var(--white); width: 100%; padding: 40px 25px; border-radius: 30px 30px 0 0; text-align: center; animation: slideUpModal 0.6s var(--bezier); }
+.btn-client-start { width: 100%; background: var(--primary); color: #fff; border: none; padding: 18px; border-radius: 15px; font-weight: 800; margin-top: 20px; font-size: 1rem; }
+.btn-vendor-gate { width: 100%; background: #f1f3f5; border: none; padding: 12px; border-radius: 15px; margin-top: 10px; font-weight: 600; color: var(--gray-medium); }
+
+/* APP HEADER */
+.app-header { 
+    background: var(--white); 
+    padding: 8px 15px; 
+    position: sticky; 
+    top: 0; 
+    z-index: 2000; 
+    border-bottom: 1px solid #eee; 
+}
+.header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.brand-small { font-weight: 900; color: var(--primary); font-size: 1.1rem; }
+.cart-btn { position: relative; font-size: 1.5rem; transition: transform 0.2s; cursor: pointer; }
+#cart-count { position: absolute; top: -5px; right: -5px; background: var(--primary); color: #fff; font-size: 0.65rem; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--white); font-weight: 800; }
+
+.search-bar { background: #f1f3f5; padding: 8px 15px; border-radius: 12px; display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.search-bar input { border: none; background: transparent; outline: none; width: 100%; font-weight: 500; }
+
+/* --- BANNER CORRIGIDO --- */
+#promo-banner-container {
+    width: 100%;
+    padding: 10px 15px; 
+    position: relative; 
+    display: none; 
+    background: transparent;
+}
+
+#banner-img {
+    width: 100%;
+    border-radius: 20px;
+    display: block;
+    object-fit: cover;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+/* --- CATEGORIAS (CHIPS) --- */
+.brand-nav { 
+    display: flex; 
+    gap: 10px; 
+    overflow-x: auto; 
+    padding: 10px 15px;
+    scrollbar-width: none;
+    align-items: center;
+    flex-wrap: nowrap; /* Isso impede a quebra de linha */
+}
+.brand-nav::-webkit-scrollbar { display: none; }
+
+.category-chip {
+    padding: 6px 15px;
+    border-radius: 50px;
+    background: var(--white);
+    color: var(--gray-medium);
+    border: 1.5px solid #eee;
+    font-size: 0.75rem;
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.3s var(--bezier);
+    
+    /* AGORA DENTRO DAS CHAVES */
+    display: flex;       
+    align-items: center; 
+    gap: 6px;            
+}
+
+/* Garante que o ícone (i) não fique gigante ou desalinhado */
+.category-chip i {
+    width: 14px !important;
+    height: 14px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.category-chip.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(194, 24, 91, 0.2);
+}
+
+/* --- DESTAQUES (VERSÃO VITRINE COMPACTA) --- */
+.section-title {
+    padding: 15px 15px 5px;
+    font-size: 1rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--dark);
+}
+
+/* Ajuste para os Destaques aceitarem a rolagem e as bolinhas */
+.destaques-slider {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 10px 15px 15px; /* Reduzi um pouco o padding inferior */
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+}
+.destaques-slider::-webkit-scrollbar { display: none; }
+
+/* Garante que a seção de destaques alinhe as bolinhas corretamente */
+#destaques-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-destaque {
+    min-width: 155px; /* Largura perfeita para mostrar 2 e um pedaço do 3º */
+    max-width: 155px;
+    background: var(--white);
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    flex-shrink: 0;
+    scroll-snap-align: start;
+}
+.card-destaque img {
+    width: 100%;
+    height: 110px;
+    object-fit: contain;
+    margin-bottom: 10px;
+    background: #fff;
+}
+
+/* Marca/Categoria (Linha Superior) */
+.card-destaque h4 {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    color: var(--gray-medium);
+    margin-bottom: 2px;
+    text-align: left;
+}
+
+/* Nome do Produto (Ocupa o centro do card) */
+.card-destaque p {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 8px;
+    line-height: 1.2;
+    text-align: left;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Garante que o nome ocupe até 2 linhas */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    height: 2rem; /* Mantém a altura fixa para os cards ficarem iguais */
+}
+
+/* Preço e Detalhes de Pagamento */
+.card-destaque .price {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin: 0;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+/* Texto de parcelamento abaixo do preço */
+.card-destaque .price::after {
+    content: "ou 3x no cartão";
+    font-size: 0.6rem;
+    color: var(--gray-medium);
+    font-weight: 500;
+}
+
+/* --- PRODUTOS E CARDS: ESTILO SLIM COM TAMANHO REALÇADO --- */
+
+/* Container para as linhas horizontais de categorias */
+.category-row-container {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 10px 15px 20px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+.category-row-container::-webkit-scrollbar {
+    display: none;
+}
+
+/* Indicador visual (as bolinhas) */
+.scroll-indicator {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-top: -10px;
+    margin-bottom: 20px;
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    background: #ddd;
+    border-radius: 50%;
+}
+
+.dot-active {
+    background: var(--primary);
+    width: 15px;
+    border-radius: 10px;
+}
+
+/* Ajuste para os cards dentro do carrossel horizontal (Voltando ao tamanho original) */
+.category-row-container .card {
+    min-width: 165px; 
+    max-width: 165px;
+    flex-shrink: 0;
+    margin-bottom: 0;
+}
+
+/* Grid Principal de Produtos (Voltando ao gap original) */
+.product-grid { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 12px; 
+    padding: 15px 15px 120px; 
+}
+
+/* Card Modernizado com Tamanho Preservado */
+.card { 
+    background: var(--white); 
+    border-radius: 18px;
+    padding: 12px; 
+    height: 100%;
+    border: 1px solid rgba(0,0,0,0.05); 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: space-between; 
+    position: relative; 
+    cursor: pointer;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.03); 
+    transition: all 0.3s var(--bezier);
+    animation: fadeInUp 0.5s var(--bezier) backwards; 
+}
+
+.card:active { 
+    transform: scale(0.96); 
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.card img { 
+    width: 100%; 
+    aspect-ratio: 1 / 1; 
+    object-fit: contain; 
+    margin-bottom: 10px; 
+    border-radius: 12px;
+}
+
+/* Nome do Produto com fonte Slim mas altura confortável */
+.card h4 { 
+    font-size: 0.8rem; 
+    font-weight: 500; 
+    color: var(--gray-medium); 
+    height: 36px; 
+    overflow: hidden; 
+    margin-bottom: 4px; 
+    line-height: 1.2;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+/* Preço com destaque */
+.price { 
+    font-size: 1.1rem; 
+    font-weight: 800; 
+    color: var(--primary); 
+    margin-bottom: 10px; 
+}
+
+/* Botão Adicionar Pílula Slim */
+.btn-add-cart { 
+    width: 100%; 
+    background: var(--primary); 
+    color: white; 
+    border: none; 
+    padding: 10px; 
+    border-radius: 12px; 
+    font-weight: 800; 
+    font-size: 0.8rem; 
+    cursor: pointer; 
+    transition: 0.3s;
+    box-shadow: 0 4px 10px rgba(194, 24, 91, 0.2);
+}
+
+.btn-add-cart:hover {
+    filter: brightness(1.1);
+}
+
+.btn-add-cart:active { 
+    background: var(--primary); 
+    color: white; 
+}
+/* MODAIS */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 4000; display: none; align-items: flex-end; animation: fadeIn 0.3s ease; }
+.modal-sheet { background: var(--white); width: 100%; border-radius: 30px 30px 0 0; padding: 20px 20px 30px; max-height: 85vh; overflow-y: auto; animation: slideUpModal 0.5s var(--bezier); position: relative; }
+
+/* Adicione este ajuste para o título */
+.modal-sheet h2 {
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin-bottom: 15px; /* Cria o espaço entre "Categorias" e os botões */
+    padding-left: 5px;
+}
+.modal-handle { width: 40px; height: 4px; background: #eee; border-radius: 10px; margin: -10px auto 20px; }
+
+/* SACOLA - VERSÃO SLIM ATUALIZADA */
+.cart-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 15px; 
+}
+
+.cart-header h2 { 
+    font-size: 1.1rem; 
+    font-weight: 800; 
+}
+
+.close-cart-btn { 
+    background: #f1f3f5; 
+    border: none; 
+    width: 32px; 
+    height: 32px; 
+    border-radius: 50%; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    color: var(--dark); 
+    cursor: pointer; 
+}
+
+.cart-items-container { 
+    margin-bottom: 15px; 
+    min-height: 50px; 
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.cart-item { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    background: #f8f9fa; 
+    padding: 10px 15px; 
+    border-radius: 14px; 
+    border: 1px solid #f1f3f5; 
+}
+
+.cart-item-name { 
+    font-size: 0.8rem; 
+    font-weight: 700; 
+    color: var(--dark); 
+}
+
+.cart-item-price { 
+    font-size: 0.85rem; 
+    font-weight: 800; 
+    color: var(--primary); 
+}
+
+.coupon-section { 
+    display: flex; 
+    gap: 8px; 
+    margin-bottom: 15px; 
+}
+
+.coupon-section input { 
+    flex: 1; 
+    padding: 10px 12px; 
+    border-radius: 12px; 
+    border: 1.5px solid #eee; 
+    outline: none; 
+    background: #f9f9f9; 
+    font-weight: 600; 
+    font-size: 0.8rem; 
+}
+
+.coupon-section button { 
+    background: var(--dark); 
+    color: white; 
+    border: none; 
+    padding: 0 15px; 
+    border-radius: 12px; 
+    font-weight: 700; 
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.totals-section { 
+    background: #f9f9f9; 
+    padding: 15px; 
+    border-radius: 15px; 
+    margin-bottom: 15px; 
+    border: 1px solid #eee; 
+}
+
+.total-row { 
+    display: flex; 
+    justify-content: space-between; 
+    margin-bottom: 6px; 
+    color: var(--gray-medium); 
+    font-weight: 600; 
+    font-size: 0.8rem; 
+}
+
+.total-row.main { 
+    margin-top: 8px; 
+    padding-top: 8px; 
+    border-top: 1px solid #eee; 
+    color: var(--dark); 
+    font-size: 1rem; 
+}
+
+.total-row.main strong { 
+    font-size: 1.15rem; 
+    font-weight: 900; 
+    color: var(--primary); 
+}
+
+.btn-checkout-final { 
+    width: 100%; 
+    background: var(--green); 
+    color: white; 
+    border: none; 
+    padding: 15px; 
+    border-radius: 15px; 
+    font-weight: 800; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 10px; 
+    font-size: 0.95rem; 
+    box-shadow: 0 8px 15px rgba(37, 211, 102, 0.2); 
+    cursor: pointer; 
+}
+/* MENUS EM LISTA */
+.category-list-vertical, .menu-options-list { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 6px; /* Espaço menor entre os botões */
+    width: 100%;
+}
+.category-list-vertical button, .menu-options-list button { 
+    width: 100%; 
+    background: #f8f9fa; 
+    border: 1.5px solid #f1f3f5; 
+    padding: 10px 15px; /* Altura reduzida de 16px para 10px */
+    border-radius: 14px; /* Cantos um pouco menos arredondados para economizar espaço */
+    font-weight: 600; 
+    text-align: left; 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    font-size: 0.85rem; /* Fonte levemente menor e mais nítida */
+    color: var(--dark);
+    cursor: pointer;
+    min-height: 48px; /* Garante um tamanho bom para o toque, mas sem exagerar */
+}
+.menu-label { 
+    font-size: 0.65rem; 
+    font-weight: 800; 
+    color: var(--gray-medium); 
+    text-transform: uppercase; 
+    margin: 10px 0 4px 5px; /* Reduzi a margem de 15px para 10px */
+    letter-spacing: 0.5px;
+}
+.social-links-row { display: flex; gap: 10px; margin: 5px 0; }
+.social-links-row button { flex: 1; justify-content: center; }
+.danger { color: #ff4d4f !important; border-color: #ffeef0 !important; background: #fff1f0 !important; }
+
+/* TAB BAR */
+.tab-bar { 
+    position: fixed; 
+    bottom: 20px; /* Sobe a barra */
+    left: 15px; 
+    right: 15px; 
+    width: auto; /* Deixa de ser 100% */
+    background: rgba(255, 255, 255, 0.85); 
+    backdrop-filter: blur(15px); /* Efeito de vidro */
+    -webkit-backdrop-filter: blur(15px);
+    display: flex; 
+    justify-content: space-around; 
+    padding: 12px 0; 
+    border-radius: 30px; /* Formato de cápsula */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15); 
+    z-index: 3000; 
+    border: 1px solid rgba(255,255,255,0.3);
+}
+/* Ajuste para o modo dark da tab bar flutuante */
+body.dark-mode .tab-bar {
+    background: rgba(30, 30, 30, 0.85);
+    border-color: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+.tab-btn { background: none; border: none; color: var(--gray-medium); display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 0.7rem; font-weight: 700; cursor: pointer; }
+.tab-btn.active { color: var(--primary); }
+
+/* ESTILOS DE PROMOÇÃO E ESTOQUE */
+.old-price { font-size: 0.75rem; color: #aaa; text-decoration: line-through; margin-right: 5px; }
+.badge-promo { position: absolute; top: 10px; left: 10px; background: var(--primary); color: white; font-size: 0.6rem; font-weight: 800; padding: 4px 8px; border-radius: 8px; z-index: 2; }
+.card.esgotado { opacity: 0.7; pointer-events: none; }
+.price-container { display: flex; align-items: baseline; margin-top: 5px; }
+
+.delivery-selection label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--white);
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #eee;
+    cursor: pointer;
+}
+
+.delivery-selection input[type="radio"] {
+    accent-color: var(--primary);
+}
+
+.coupon-card { transition: transform 0.2s; }
+.coupon-card:active { transform: scale(0.98); }
+
+/* FAVORITOS E ANIMAÇÕES */
+@keyframes heartBeat {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
+
+.tab-btn {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.fav-counter {
+    position: absolute;
+    top: -2px; 
+    right: 50%;
+    transform: translateX(12px); 
+    background: var(--primary);
+    color: white !important;
+    font-size: 10px;
+    font-weight: 800;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: none; 
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--white);
+    z-index: 10;
+    line-height: 1;
+    pointer-events: none;
+}
+
+.tab-btn.active i[data-lucide="heart"] {
+    animation: heartBeat 0.4s ease-in-out !important;
+    fill: var(--primary) !important;
+    color: var(--primary) !important;
+}
+
+.tab-btn.active i {
+    color: var(--primary) !important;
+}
+
+/* VOLTAR AO TOPO */
+#btn-top {
+    position: fixed;
+    bottom: 100px; /* Subir só mais 5px para o respiro ficar perfeito visualmente */
+    right: 20px;
+    background: var(--primary);
+    color: white;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    z-index: 2000;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-top-hidden {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+}
+
+.btn-top-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+/* Estilo da imagem que voa */
+.flying-item {
+    position: fixed;
+    z-index: 10000;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    pointer-events: none;
+    transition: all 0.8s cubic-bezier(0.42, 0, 0.58, 1);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    border: 2px solid var(--white);
+}
+
+/* Efeito de impacto no carrinho */
+@keyframes cart-bounce {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
+
+.cart-bounce {
+    animation: cart-bounce 0.4s ease-in-out;
+}
+/* Botão de compartilhar no card do cliente */
+.btn-share-client {
+    flex: 1;
+    background: #f0f0f0 !important;
+    color: #555 !important;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+body.dark-mode .btn-share-client {
+    background: #333 !important;
+    color: #eee !important;
+}
+
+.btn-share-client:active {
+    transform: scale(0.9);
+}
+/* SELO DE OFERTA NO DESTAQUE */
+.card-destaque::before {
+    content: "OFERTA";
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: var(--primary);
+    color: white;
+    font-size: 0.55rem;
+    font-weight: 900;
+    padding: 3px 8px;
+    border-radius: 6px;
+    z-index: 2;
+    box-shadow: 0 2px 5px rgba(194, 24, 91, 0.3);
+}
+/* --- AJUSTE DOS TÍTULOS DE CATEGORIA COM BOTÃO --- */
+h3[style*="font-size: 0.85rem"]::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 14px;
+    background: var(--primary);
+    border-radius: 10px;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+/* Garante que o título e o container se adaptem ao modo dark */
+body.dark-mode h3[style*="font-size: 0.85rem"] {
+    color: #ffffff !important;
+}
+
+body.dark-mode div[style*="border-bottom"] {
+    border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Efeito de clique no botão "Ver todos" */
+button[onclick*="setFilter"]:active {
+    transform: scale(0.9);
+    opacity: 0.8;
+}
+/* Permite que o container role para o lado e esconde a barra de rolagem */
+.category-row-container {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 10px 15px 20px;
+    scrollbar-width: none; /* Esconde no Firefox */
+    -webkit-overflow-scrolling: touch; /* Rolagem suave no iPhone */
+}
+
+.category-row-container::-webkit-scrollbar {
+    display: none; /* Esconde no Chrome e Safari */
+}
+.badge-promo {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #ff4d4f;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 0.65rem;
+    font-weight: 800;
+    z-index: 10;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    text-transform: uppercase;
+}
+/* SELO PERSONALIZADO (TAG DO ADMIN) */
+.custom-tag {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: linear-gradient(135deg, #d4af37, #f1c40f);
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 8px;
+    font-size: 0.65rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    z-index: 11; /* Um nível acima da promo */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    letter-spacing: 0.5px;
+    animation: fadeIn 0.3s ease;
+}
+
+/* Se houver PROMO e TAG juntas, a TAG desce um pouco para não cobrir */
+.badge-promo + .custom-tag {
+    top: 38px;
+}
+
+body.dark-mode .custom-tag {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+/* Badge (Bolinha Vermelha) */
+.notif-badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 10px;
+    height: 10px;
+    background-color: #ff4d4f; /* Vermelho vibrante */
+    border: 2px solid var(--white);
+    border-radius: 50%;
+    display: none; /* Escondido por padrão, o JS mostrará se houver pendências */
+    z-index: 10;
+}
+
+/* Item individual na lista de notificações */
+.notification-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: var(--gray-bg);
+    border-radius: 12px;
+    margin-bottom: 10px;
+    border-left: 4px solid var(--primary); /* Destaque lateral */
+}
+
+.notification-item i {
+    color: var(--primary);
+    width: 20px;
+}
+
+.notification-item p {
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin: 0;
+    color: var(--dark);
+}
+
+/* Estilo para quando for um alerta de Estoque Crítico */
+.notif-critico {
+    border-left-color: #ff4d4f;
+    background: #fff1f0;
+}
+
+body.dark-mode .notif-critico {
+    background: #2a1215;
+}
+.custom-tag {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: linear-gradient(135deg, #d4af37, #f1c40f);
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 0.65rem;
+    font-weight: 800;
+    z-index: 10;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    text-transform: uppercase;
+}
+
+/* Se tiver PROMO e TAG juntas, a TAG desce para não encavalar */
+.badge-promo + .custom-tag {
+    top: 35px;
+}

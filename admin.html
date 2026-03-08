@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão Karol Mell | Admin</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .input-adm { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd; margin-bottom: 8px; font-size: 0.85rem; outline: none; }
+        .row-adm { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .upload-zone { border: 2px dashed #ddd; padding: 12px; border-radius: 12px; text-align: center; margin-bottom: 10px; cursor: pointer; font-size: 0.8rem; color: #888; transition: all 0.3s; }
+        .upload-zone.editing { border-color: var(--gold); background: #fffcf0; }
+        #preview-img, #preview-banner { width: 60px; height: 60px; object-fit: contain; margin: 5px auto; display: none; border-radius: 8px; }
+        .btn-save { width: 100%; cursor: pointer; background: var(--primary); color: #fff; border: none; padding: 15px; border-radius: 15px; font-weight: 800; margin-top: 10px; }
+        .admin-card { background: #fff; padding: 20px; border-radius: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .badge-combo { background: var(--gold); color: #fff; font-size: 0.6rem; padding: 2px 6px; border-radius: 4px; font-weight: 800; }
+        .btn-backup { flex: 1; padding: 12px; border-radius: 12px; font-weight: 700; border: none; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; font-size: 0.8rem; }
+        .stock-critical { background: #fff5f5 !important; border: 1px solid #feb2b2 !important; }
+    </style>
+</head>
+<body style="background: #f4f7f9; padding: 20px; padding-bottom: 100px;">
+    <script>
+        if (sessionStorage.getItem('isAdmin') !== 'true') {
+            document.body.style.display = 'none';
+            window.location.href = 'index.html';
+        }
+    </script>
+    <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+    <div>
+        <h2 id="admin-store-name" style="font-weight: 800; color: var(--primary);">Painel Karol Mell</h2>
+        <div style="background: #eee; border-radius: 10px; padding: 8px; margin-top: 10px; min-width: 200px;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.65rem; font-weight: 800; margin-bottom: 4px;">
+                    <span>MEMÓRIA</span>
+                    <span id="storage-percent">0%</span>
+                </div>
+                <div style="width: 100%; background: #ddd; height: 6px; border-radius: 3px; overflow: hidden;">
+                    <div id="storage-bar" style="width: 0%; height: 100%; background: var(--primary); transition: width 0.5s;"></div>
+                </div>
+                <p id="storage-text" style="font-size: 0.6rem; margin-top: 4px; color: #666;">Calculando...</p>
+            </div>
+        </div>
+        <button onclick="logoutAdmin()" style="background: #fff; border: 1px solid #eee; padding: 10px; border-radius: 12px; cursor: pointer;"><i data-lucide="log-out"></i></button>
+    </header>
+    <div class="admin-card">
+        <h3 id="form-title" style="margin-bottom: 15px; font-weight: 800; font-size: 1rem;">Novo Produto ou Combo</h3>
+        
+        <div id="upload-container" class="upload-zone" onclick="document.getElementById('adm-file').click()">
+    <i data-lucide="image" style="margin-bottom: 5px;"></i>
+    <p>Toque para enviar foto (Consome Memória)</p>
+    <span style="display: block; font-size: 0.65rem; color: #ff4d4f; font-weight: 800; margin-top: 5px;">TAMANHO IDEAL: 600x600px (QUADRADA)</span>
+    
+    <input type="file" id="adm-file" hidden accept="image/*" onchange="processarImagem(event, 'preview-img')">
+    <img id="preview-img">
+</div>
+        <input type="text" id="adm-img" placeholder="Link da Imagem (Recomendado para economizar espaço)" class="input-adm">
+        <input type="text" id="adm-nome" placeholder="Nome do Produto/Combo" class="input-adm">
+        
+<input type="text" id="adm-marca" placeholder="Marca (Ex: Boticário)" class="input-adm">
+
+<div class="row-adm">
+    <select id="adm-categoria" class="input-adm" style="background: white;">
+        <option value="">Selecione a Categoria</option>
+    </select>
+    <input type="text" id="adm-tag" class="input-adm" placeholder="Tag (ex: Em Alta, Oferta)">
+</div>
+        <div class="row-adm">
+    <input type="number" id="adm-preco-de" placeholder="Preço Antigo (Opcional)" class="input-adm">
+    <input type="number" id="adm-preco" placeholder="Preço Venda (R$)" class="input-adm" oninput="calcularLucroReal()">
+</div>
+<div class="row-adm" style="margin-top: 5px; margin-bottom: 10px;">
+    <div>
+        <p style="font-size: 0.65rem; font-weight: 800; color: #666; margin-bottom: 3px; margin-left: 5px;">PREÇO DE CUSTO (PAGO)</p>
+        <input type="number" id="adm-custo" placeholder="R$ 0,00" class="input-adm" style="margin-bottom: 0;" oninput="calcularLucroReal()">
+    </div>
+    <div id="display-lucro" style="background: #f0fff4; border: 1px dashed #27ae60; border-radius: 12px; padding: 5px; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 55px;">
+        <span style="font-size: 0.55rem; font-weight: 800; color: #27ae60; text-transform: uppercase;">Lucro Líquido</span>
+        <span id="valor-lucro" style="font-size: 0.9rem; font-weight: 800; color: #1e7e34;">R$ 0,00</span>
+        <span id="porcentagem-lucro" style="font-size: 0.6rem; color: #27ae60; font-weight: 600;">(0%)</span>
+    </div>
+</div>
+        <div class="row-adm">
+    <input type="number" id="adm-estoque" placeholder="Qtd Estoque" class="input-adm">
+
+    <div style="display: flex; align-items: center; gap: 8px; background: #fffdf5; padding: 10px; border-radius: 12px; border: 1px solid #ffeaa7; margin-bottom: 8px;">
+        <input type="checkbox" id="adm-destaque" style="width: 18px; height: 18px; cursor: pointer;">
+        <label for="adm-destaque" style="font-size: 0.75rem; font-weight: 800; color: #b8860b; cursor: pointer;">⭐ Por em Destaque</label>
+    </div>
+    <input type="text" id="adm-link-pag" placeholder="Link Mercado Pago/PagSeguro" class="input-adm">
+</div>
+        <p style="font-size: 0.7rem; font-weight: 700; margin: 5px 0 2px;">Data Limite da Oferta (Ativa o Cronômetro):</p>
+        <input type="datetime-local" id="adm-oferta-ate" class="input-adm">
+
+        <textarea id="adm-desc" placeholder="Descrição do que vem no combo ou detalhes do produto..." class="input-adm" style="height: 80px;"></textarea>
+        
+        <button class="btn-save" onclick="adicionarProduto()">
+            <span id="btn-salvar-texto">Salvar no Catálogo</span>
+        </button>
+        <button id="btn-cancelar-edit" class="btn-ghost hidden" onclick="limparFormulario()" style="width:100%; margin-top:10px; border:none; background:none; color:#888; font-weight:600; cursor:pointer;">Cancelar Edição</button>
+    </div>
+        <div class="admin-card" style="border: 2px solid var(--gold); background: #fffdf5; margin-top: 30px;">
+        <h3 style="margin-bottom: 10px; font-weight: 800; font-size: 1rem; color: #b8860b; display: flex; align-items: center; gap: 8px;">
+            <i data-lucide="star"></i> Destaques da Vitrine
+        </h3>
+        <p style="font-size: 0.7rem; color: #888; margin-bottom: 15px;">Estes itens aparecem no carrossel superior da página principal.</p>
+        
+        <div id="admin-destaques-list">
+            <p style="font-size: 0.75rem; color: #bbb; text-align: center; padding: 20px;">Nenhum item em destaque no momento.</p>
+        </div>
+    </div>
+        <div class="admin-card" style="border: 2px solid var(--primary); background: #fff5f8;">
+        <h3 style="margin-bottom: 15px; font-weight: 800; color: var(--primary);">Configurações da Loja</h3>
+        
+        <p style="font-size: 0.7rem; font-weight: 700; margin-bottom: 5px;">Nome Curto (Ex: Karol Mell):</p>
+        <input type="text" id="cfg-nome-curto" placeholder="Ex: Karol Mell" class="input-adm">
+        
+        <p style="font-size: 0.7rem; font-weight: 700; margin: 10px 0 5px;">Nome Completo / Slogan:</p>
+        <input type="text" id="cfg-nome-completo" placeholder="Ex: Cosméticos e Variedades" class="input-adm">
+        
+        <button class="btn-save" onclick="salvarConfiguracoesLoja()" style="background: var(--primary); padding: 10px; font-size: 0.8rem;">Atualizar Nomes da Loja</button>
+    </div>
+
+    <div class="admin-card" style="border: 2px solid #eee; background: #fafafa;">
+        <h3 style="margin-bottom: 10px; font-weight: 800; font-size: 0.9rem;">Gerenciar Dados (Backup)</h3>
+        <div style="display: flex; gap: 10px;">
+            <button onclick="exportarDados()" class="btn-backup" style="background: #333; color: white;">
+                <i data-lucide="download"></i> Exportar
+            </button>
+            <button onclick="document.getElementById('import-file').click()" class="btn-backup" style="background: #fff; border: 1px solid #ddd; color: #333;">
+                <i data-lucide="upload"></i> Importar
+            </button>
+            <input type="file" id="import-file" style="display: none;" accept=".json" onchange="importarDados(event)">
+        </div>
+    </div>
+
+    <div class="admin-card">
+        <h3 style="margin-bottom: 15px; font-weight: 800;">Cupons de Desconto</h3>
+        <input type="text" id="adm-cupom-nome" placeholder="CÓDIGO" class="input-adm" style="text-transform: uppercase;">
+        <input type="number" id="adm-cupom-pct" placeholder="% de Desconto" class="input-adm">
+        <button class="btn-save" onclick="salvarCupom()" style="background: var(--dark); padding: 10px; font-size: 0.8rem;">Ativar Cupom</button>
+        <div id="admin-coupon-list" style="margin-top: 15px;"></div>
+    </div>
+
+    <div class="admin-card">
+        <h3 style="margin-bottom: 15px; font-weight: 800;">Banner da Loja</h3>
+        
+       <div class="upload-zone" onclick="document.getElementById('adm-file-banner').click()">
+    <i data-lucide="image"></i>
+    <p>Alterar Imagem do Banner</p>
+    <span style="display: block; font-size: 0.65rem; color: #ff4d4f; font-weight: 800; margin-top: 5px;">TAMANHO IDEAL: 1080x450px (RETANGULAR)</span>
+    
+    <input type="file" id="adm-file-banner" hidden accept="image/*" onchange="processarImagem(event, 'preview-banner', true)">
+    <img id="preview-banner" src="" style="width:100%; height:auto; object-fit: cover; border-radius:12px; margin-bottom:10px; display:none;">
+</div>
+        <input type="text" id="adm-banner-url" placeholder="Ou link direto da imagem" class="input-adm">
+        
+        <p style="font-size: 0.7rem; font-weight: 700; margin: 10px 0 5px;">Altura do Banner (Redimensionar):</p>
+        <input type="range" id="adm-banner-height" min="100" max="500" value="200" class="input-adm" oninput="ajustarPreviewBanner(this.value)">
+        
+        <p style="font-size: 0.7rem; font-weight: 700; margin: 10px 0 5px;">Agendar para Data Comemorativa:</p>
+        <select id="adm-banner-mes" class="input-adm">
+            <option value="sempre">Exibir Sempre</option>
+            <option value="4">Maio (Mês das Mães)</option>
+            <option value="5">Junho (Dia dos Namorados)</option>
+            <option value="7">Agosto (Dia dos Pais)</option>
+            <option value="11">Dezembro (Natal)</option>
+        </select>
+        
+        <div style="display: flex; gap: 10px;">
+            <button class="btn-save" onclick="atualizarBanner()" style="flex: 3; padding: 10px; font-size: 0.8rem;">Aplicar Banner</button>
+            <button onclick="removerBanner()" style="flex: 1; background: #fff1f0; color: #ff4d4f; border: 1px solid #ffa39e; border-radius: 12px; margin-top: 10px; cursor: pointer;">
+                <i data-lucide="trash-2"></i>
+            </button>
+        </div>
+    </div>
+<div class="admin-card">
+    <h3 style="margin-bottom: 15px; font-weight: 800;">Gerenciar Categorias</h3>
+    <div style="display: flex; gap: 8px; margin-bottom: 15px;">
+        <input type="text" id="nova-categoria-nome" placeholder="Nova Categoria (Ex: Maquiagem)" class="input-adm" style="margin-bottom: 0;">
+        <button onclick="adicionarNovaCategoria()" class="btn-save" style="margin-top: 0; width: auto; padding: 0 20px;">+</button>
+    </div>
+    <div id="admin-categorias-list" style="display: flex; flex-wrap: wrap; gap: 8px;">
+        </div>
+</div>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin: 25px 0 10px;">
+        <h3 style="font-weight: 800;">Lista de Itens</h3>
+        <span id="admin-count" style="background: var(--primary); color: white; padding: 2px 8px; border-radius: 8px; font-size: 0.75rem; font-weight: 800;">0</span>
+    </div>
+    
+    <div style="display: flex; gap: 10px; margin: 20px 0 15px;">
+        <button onclick="filtrarEsgotados()" id="btn-filtro-esgotados" style="flex: 1; background: #f0f0f0; border: none; padding: 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; color: #555; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
+            <i data-lucide="search" style="width: 14px;"></i> Ver Esgotados
+        </button>
+        <button onclick="limparEsgotadosConfirmacao()" style="flex: 1; background: #fff1f0; color: #ff4d4f; border: 1px solid #ffa39e; padding: 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
+            <i data-lucide="trash-2" style="width: 14px;"></i> Limpar Zerados
+        </button>
+    </div>
+
+        <div id="admin-product-list"></div>
+
+    <script src="dados.js"></script>
+    <script src="utils.js"></script>
+    <script src="admin.js"></script>
+    
+        <script>
+                window.onload = function() {
+            if (typeof sincronizarDados === 'function') sincronizarDados();
+            if (typeof renderAdminList === 'function') renderAdminList();
+            if (typeof renderAdminCupons === 'function') renderAdminCupons();
+            if (typeof renderAdminDestaques === 'function') renderAdminDestaques();
+            if (typeof renderAdminCategorias === 'function') renderAdminCategorias();
+            if (typeof atualizarMedidorEspaco === 'function') atualizarMedidorEspaco();
+            
+            // ADICIONE ESTA LINHA ABAIXO:
+            if (typeof carregarCamposConfig === 'function') carregarCamposConfig();
+            
+            if (window.lucide) lucide.createIcons();
+        };
+    </script>
+</body>
+</html>

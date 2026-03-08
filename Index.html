@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="O melhor catálogo de cosméticos e variedades em Oeiras do Pará.">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Karol Mell | Cosméticos e Variedades">
+    <meta property="og:description" content="Confira nossas ofertas exclusivas em perfumaria e cuidados pessoais.">
+    <meta property="og:image" content="https://res.cloudinary.com/beleza-na-web/image/upload/f_auto,fl_progressive,q_auto:eco/v1/imagens/product/B76700/6905a968-306c-4809-9430-6725287f94e9-liz-des-colonia-100ml.png">
+    <title>Karol Mell | Cosméticos e Variedades</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+<div id="screen-gate" class="gate-overlay">
+        <div class="gate-card">
+            <h1 id="gate-name" class="gate-logo">KAROL MELL</h1>
+            <p id="gate-slogan" class="gate-tagline">Cosméticos e Variedades</p>
+            <div id="gate-options">
+                <button class="btn-client-start" onclick="accessAsClient()" style="display: flex; flex-direction: column; align-items: center; line-height: 1.2; padding: 15px;">
+    <span style="font-size: 1.1rem;">Ver Novidades ✨</span>
+    <span style="font-size: 0.7rem; opacity: 0.8; font-weight: 400;">Acesse nosso catálogo completo</span>
+</button>
+                <button class="btn-vendor-gate" onclick="showLogin()">Acesso Administrativo</button>
+            </div>
+                                    <div id="gate-login" class="hidden" style="margin-top: 20px;">
+                <div class="login-box-premium">
+                    <div style="margin-bottom: 20px;">
+                        <div style="position: relative; margin-bottom: 15px;">
+                            <i data-lucide="user" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #d4af37; width: 18px;"></i>
+                            <input type="text" id="user" placeholder="Usuário" class="input-adm" style="width: 100%; padding: 12px 12px 12px 40px; border-radius: 12px; border: 1px solid #eee; background: #fafafa; outline: none; font-family: inherit;">
+                        </div>
+
+                        <div style="position: relative; width: 100%;">
+                            <i data-lucide="lock" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #d4af37; width: 18px;"></i>
+                            <input type="password" id="pass" placeholder="Senha" class="input-adm" style="width: 100%; padding: 12px 45px 12px 40px; border-radius: 12px; border: 1px solid #eee; background: #fafafa; outline: none; font-family: inherit;">
+                            <button onclick="togglePassword()" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #888; cursor: pointer; display: flex; align-items: center;">
+                                <i id="eye-icon" data-lucide="eye" size="18"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; font-size: 0.85rem; color: #666;">
+                        <input type="checkbox" id="remember-me" style="accent-color: var(--primary); cursor: pointer;">
+                        <label for="remember-me" style="cursor: pointer;">Lembrar meu acesso</label>
+                    </div>
+
+                    <button class="btn-primary-pro" onclick="validateLogin()" style="width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 15px; font-weight: 800; font-size: 0.9rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s;">
+                        <span>Entrar no Painel</span>
+                        <i data-lucide="chevron-right" size="18"></i>
+                    </button>
+                    
+                    <button onclick="location.reload()" style="background:none; border:none; color:#999; margin-top:15px; cursor:pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 5px; width: 100%; justify-content: center; font-weight: 600;">
+                        <i data-lucide="arrow-left" size="14"></i> Voltar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <div id="screen-app" class="hidden">
+        <header class="app-header">
+            <div class="header-top">
+                <div id="main-store-name" class="brand-small">KAROL MELL</div>
+                <div class="header-actions" style="display: flex; gap: 15px; align-items: center;">
+    <button onclick="toggleTheme()" style="background:none; border:none; cursor:pointer; color:inherit;">
+        <i data-lucide="moon" id="theme-icon"></i>
+    </button>
+    <div class="cart-btn" onclick="openNotifications()" style="background: none; box-shadow: none; width: auto; position: relative;">
+        <i data-lucide="bell"></i>
+        <span id="notif-badge" class="notif-badge" style="display: none;"></span>
+    </div>
+    <div class="cart-btn" id="main-cart-btn" onclick="openCart()">
+        <i data-lucide="shopping-bag"></i>
+        <span id="cart-count">0</span>
+    </div>
+</div>
+</div>
+
+           <div class="search-wrapper" style="display: flex; gap: 10px; padding: 5px 15px 15px; align-items: center;">
+    <div style="position: relative; flex: 1;">
+        <i data-lucide="search" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 16px; color: var(--primary);"></i>
+        <input type="text" id="search-input" placeholder="Buscar perfumes, kits..." onkeyup="filterSearch()" 
+               style="width: 100%; padding: 14px 15px 14px 42px; border-radius: 18px; border: none; outline: none; background: var(--white); box-shadow: 0 4px 12px rgba(0,0,0,0.03); font-family: inherit; font-size: 0.85rem;">
+    </div>
+    
+    <div style="position: relative;">
+        <select id="price-filter" onchange="handleQuickFilter(this.value)" 
+        style="appearance: none; -webkit-appearance: none; background: var(--primary); border: none; padding: 12px; border-radius: 15px; cursor: pointer; color: #fff; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(194, 24, 91, 0.2);">
+            <option value="todos"></option>
+            <option value="0-50">Até R$ 50</option>
+            <option value="50-150">Até R$ 150</option>
+            <option value="150-300">Até R$ 300</option>
+            <option value="300-9999">Premium</option>
+        </select>
+        <i data-lucide="sliders-horizontal" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); pointer-events: none; width: 18px; color: #fff;"></i>
+    </div>
+</div>
+<div class="brand-nav-wrapper" style="width: 100%; overflow: hidden; background: var(--white); border-bottom: 1px solid rgba(0,0,0,0.05);">
+    <nav class="brand-nav" id="main-chips" style="display: flex; overflow-x: auto; gap: 10px; padding: 12px 15px; scrollbar-width: none; -webkit-overflow-scrolling: touch;">
+        <button class="category-chip active" onclick="filtrarCategoria('todos')" style="flex: 0 0 auto;">✨ Tudo</button>
+        <button class="category-chip" onclick="filtrarCategoria('Combos')" style="flex: 0 0 auto;">🔥 Combos</button>
+        <button class="category-chip" onclick="filtrarCategoria('Outlet')" style="flex: 0 0 auto;">🏷️ Outlet</button>
+        <button class="category-chip" onclick="filtrarCategoria('Perfumaria')" style="flex: 0 0 auto;">💎 Perfumaria</button>
+        <button class="category-chip" onclick="filtrarCategoria('Skincare')" style="flex: 0 0 auto;">💧 Skincare</button>
+    </nav>
+</div>
+</header>
+
+<main class="app-content">
+    <div id="promo-banner-container" style="display:none; width: 100%; padding: 10px 15px;">
+        <img id="banner-img" src="" alt="Banner Promocional" style="width:100%; border-radius:20px; height: 180px; object-fit: cover;">
+    </div>
+
+    <div id="destaques-section" class="hidden">
+        <div class="section-title">
+            <i data-lucide="sparkles" style="color: var(--gold); width: 18px;"></i>
+            Destaques da Semana
+        </div>
+        <div class="destaques-slider" id="destaques-grid"></div>
+    </div>
+            <section id="product-grid" class="product-grid"></section>
+
+            <section style="padding: 20px 15px; margin-bottom: 100px;">
+                <h3 style="font-weight: 800; margin-bottom: 12px; font-size: 0.9rem;">O que dizem nossas clientes 😍</h3>
+                <div id="testimonials-list" style="display: flex; gap: 12px; overflow-x: auto; padding-bottom: 10px;"></div>
+            </section>
+        </main>
+
+        <nav class="tab-bar">
+            <button class="tab-btn active" onclick="scrollToTop(); filtrarCategoria('todos')">
+                <i data-lucide="home"></i>
+                <span>Início</span>
+            </button>
+            <button class="tab-btn" onclick="openCategories()">
+                <i data-lucide="layout-grid"></i>
+                <span>Categorias</span>
+            </button>
+            <button class="tab-btn" onclick="filtrarCategoria('favs')">
+                <i data-lucide="heart"></i>
+                <span>Favoritos</span>
+                <span id="fav-count" class="fav-counter">0</span>
+            </button>
+            <button class="tab-btn" onclick="toggleExtraMenu()">
+                <i data-lucide="menu"></i>
+                <span>Menu</span>
+            </button>
+        </nav>
+    </div>
+
+        <div id="modal-details" class="modal-overlay" onclick="closeDetails()">
+        <div class="modal-sheet" onclick="event.stopPropagation()">
+            <div class="modal-handle"></div>
+            <div id="details-content"></div>
+        </div>
+    </div>
+
+    <div id="modal-categories" class="modal-overlay" onclick="closeCategories()">
+        <div class="modal-sheet" onclick="event.stopPropagation()">
+            <div class="modal-handle"></div>
+            <h2>Categorias</h2>
+            <div class="category-list-vertical" id="modal-category-list"></div>
+        </div>
+    </div>
+
+    <div id="extra-menu" class="modal-overlay" onclick="toggleExtraMenu()">
+        <div class="modal-sheet" onclick="event.stopPropagation()">
+            <div class="modal-handle"></div>
+            <div class="menu-options-list">
+                <p class="menu-label">Minha Conta</p>
+                <button onclick="alert('Em breve')"><i data-lucide="package"></i> Meus Pedidos</button>
+                <button onclick="openCart(); toggleExtraMenu()"><i data-lucide="shopping-bag"></i> Ver Minha Sacola</button>
+                <p class="menu-label">Informações</p>
+                <button onclick="window.open('https://wa.me/5591993770606')"><i data-lucide="help-circle"></i> Ajuda e Suporte</button>
+                <button onclick="alert('Consulte prazos no chat')"><i data-lucide="truck"></i> Política de Entrega</button>
+                <button onclick="alert('Aceitamos Pix, Cartão de Crédito e Débito')"><i data-lucide="credit-card"></i> Formas de Pagamento</button>
+                <div class="social-links-row">
+                    <button onclick="window.open('https://www.instagram.com/karolmell_?igsh=dDZvYjh6ejF4d29x', '_blank')"><i data-lucide="instagram"></i> Instagram</button>
+                    <button onclick="window.open('https://wa.me/5591993770606')"><i data-lucide="message-circle"></i> WhatsApp</button>
+                </div>
+                <button class="danger" onclick="location.reload()"><i data-lucide="log-out"></i> Sair do Catálogo</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="cart-modal" class="modal-overlay" onclick="closeCart()">
+        <div class="modal-sheet cart-sheet" onclick="event.stopPropagation()">
+            <div class="modal-handle"></div>
+            <div class="cart-header">
+                <h2>Minha Sacola 👜</h2>
+                <div style="display: flex; gap: 10px;">
+                    <button class="close-cart-btn" style="color: #ff4d4f;" onclick="clearCart()" title="Limpar Sacola"><i data-lucide="trash-2"></i></button>
+                    <button class="close-cart-btn" onclick="closeCart()"><i data-lucide="x"></i></button>
+                </div>
+            </div>
+            <div id="cart-items" class="cart-items-container"></div>
+            <div class="delivery-selection" style="padding: 15px; background: #f8f9fa; border-radius: 15px; margin-bottom: 15px;">
+                <p style="font-size: 0.8rem; font-weight: 800; margin-bottom: 10px;">Como deseja receber?</p>
+                <div style="display: flex; gap: 10px;">
+                    <label style="flex:1; font-size: 0.8rem; font-weight: 600;"><input type="radio" name="delivery" value="retirada" checked onclick="updateCartUI()"> Retirada</label>
+                    <label style="flex:1; font-size: 0.8rem; font-weight: 600;"><input type="radio" name="delivery" value="entrega" onclick="updateCartUI()"> Entrega</label>
+                </div>
+                <div id="bairro-select-container" class="hidden" style="margin-top:10px;">
+                    <select id="bairro-select" class="input-adm" onchange="updateCartUI()" style="margin-bottom:0;">
+                        <option value="oeiras">Oeiras do Pará (Grátis)</option>
+                        <option value="outros">Outras regiões (A combinar)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="cart-footer">
+                <div class="coupon-section">
+                    <input type="text" id="coupon-input" placeholder="Possui um cupom?">
+                    <button onclick="applyCoupon()">Aplicar</button>
+                </div>
+                <div class="totals-section">
+                    <div class="total-row"><span>Subtotal</span><span id="sub-total">R$ 0,00</span></div>
+                    <div id="delivery-row" class="total-row hidden"><span>Entrega</span><span id="delivery-price">R$ 0,00</span></div>
+                    <div id="discount-row" class="total-row hidden" style="color: #27ae60;"><span>Desconto</span><span id="discount-value">- R$ 0,00</span></div>
+                    <div class="total-row main"><span>Total</span><strong id="cart-total">R$ 0,00</strong></div>
+                </div>
+                                <button id="btn-finalizar-zap" class="btn-checkout-final" onclick="sendOrderWhatsApp()"><i data-lucide="shopping-cart"></i> Fechar Pedido no WhatsApp</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-notifications" class="modal-overlay" onclick="closeNotifications()">
+        <div class="modal-sheet" onclick="event.stopPropagation()">
+            <div class="modal-handle"></div>
+            <div class="cart-header">
+                <h2>Notificações 🔔</h2>
+                <button class="close-cart-btn" onclick="closeNotifications()"><i data-lucide="x"></i></button>
+            </div>
+            <div id="notifications-list" style="padding: 15px; max-height: 60vh; overflow-y: auto;">
+                </div>
+        </div>
+    </div>
+        <button id="btn-top" onclick="scrollToTop()" class="btn-top-hidden">
+        <i data-lucide="chevron-up"></i>
+    </button>
+
+    <script src="dados.js"></script>
+    <script src="utils.js"></script>
+    <script src="admin.js"></script>
+    <script src="script.js"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>
