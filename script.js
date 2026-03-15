@@ -1,5 +1,3 @@
-script.js
-
 let cupomAplicado = null;
 
 let currentFilter = 'todos';
